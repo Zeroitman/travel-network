@@ -12,7 +12,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'social_network'
+    'social_network',
 ]
 
 MIDDLEWARE = [
@@ -42,7 +42,6 @@ TEMPLATES = [
         },
     },
 ]
-
 WSGI_APPLICATION = 'source.wsgi.application'
 
 DATABASES = {
@@ -68,4 +67,4 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 MEDIA_URL = '/uploads/'
-IMAGE_UPLOAD_MAX_MEMORY_SIZE = 5242880
+FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880

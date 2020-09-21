@@ -19,22 +19,14 @@ class Post(models.Model):
         verbose_name = 'Пост'
         verbose_name_plural = 'Посты'
 
-    post_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    post_user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="Создатель поста", on_delete=models.CASCADE)
     post_subject = models.CharField("Тема поста", max_length=200)
     post_body = models.TextField("Тело поста", validators=[MinLengthValidator(3)])
+    tag = models.CharField("Тэги", max_length=100, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return str(self.id)
-
-
-class Image(models.Model):
-    class Meta:
-        verbose_name = 'Изображение'
-        verbose_name_plural = 'Изображения'
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='post_images/', null=True, blank=True)
 
     def __str__(self):
         return str(self.id)
+
