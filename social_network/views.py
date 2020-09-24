@@ -1,9 +1,13 @@
 from django.views.generic import ListView
-from social_network.models import Post
+from social_network.models import *
 
 
 class PostList(ListView):
     queryset = Post.objects.all()
     model = Post
     template_name = 'post.html'
-    permission_required = 'webapp.view_child'
+
+
+class UserInfoListView(ListView):
+    model = UserInfo
+    template_name = 'users.html'
