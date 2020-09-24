@@ -8,7 +8,11 @@ class UserInfo(models.Model):
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
+
     user = models.OneToOneField(User, on_delete=models.PROTECT, related_name='client', verbose_name='Пользователь')
+    full_name = models.CharField(max_length=100, blank=False, verbose_name='ФИО пользователя')
+    create_post_status = models.BooleanField("Возможность создавать посты", default=True)
+    access_status = models.BooleanField("Статус доступа к приложению", default=True)
 
     def __str__(self):
         return "%s" % self.user.username
@@ -19,22 +23,14 @@ class Post(models.Model):
         verbose_name = 'Пост'
         verbose_name_plural = 'Посты'
 
-    post_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    post_user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="Создатель поста", on_delete=models.CASCADE)
     post_subject = models.CharField("Тема поста", max_length=200)
     post_body = models.TextField("Тело поста", validators=[MinLengthValidator(3)])
+    tag = models.CharField("Тэги", max_length=100, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return str(self.id)
-
-
-class Image(models.Model):
-    class Meta:
-        verbose_name = 'Изображение'
-        verbose_name_plural = 'Изображения'
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='post_images/', null=True, blank=True)
+    activity = models.BooleanField('Активность', default=True)
 
     def __str__(self):
         return str(self.id)

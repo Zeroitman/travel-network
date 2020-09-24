@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}Регистрация{% endblock %}
+{% load static %}
+{% block content %}
+    <div class="container">
+        <div class="border-bottom pb-2 pt-2 text-center">
+            <h2 class="font-weight-bold">Регистрация</h2>
+        </div>
+        <div class="text-center text-danger">{{ form.non_field_errors }}</div>
+        <form enctype="multipart/form-data" method="post">
+            {% csrf_token %}
+            <div class="form-group row mt-3">
+                <label for="id_username" class="col-sm-2 col-form-label col-form-label-sm">Логин</label>
+                <div class="col-sm-6">
+                    {{ form.username }}
+                    <small class="form-text text-muted">Обязательное поле. Не более 150 символов. Только буквы, цифры и
+                        символы @/./+/-/_.
+                    </small>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="id_password1" class="col-sm-2 col-form-label col-form-label-sm">Пароль</label>
+                <div class="col-sm-6">
+                    <input type="password" id="id_password1" name="password1" required
+                           class="form-control form-control-sm shadow-none" placeholder="Введите пароль">
+                    <small class="form-text text-muted">Не менее 8 символов</small>
+                    {% for i in form.password1.errors %}
+                        <p class="font-weight-light text-danger d-block small text-center pb-0 mb-0">{{ i }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="id_password2" class="col-sm-2 col-form-label col-form-label-sm">Подтверждение пароля</label>
+                <div class="col-sm-6">
+                    <input type="password" id="id_password2" name="password2" required
+                           class="form-control form-control-sm shadow-none" placeholder="Подтвердите пароль">
+                    <small class="form-text text-muted">Подтвердите пароль</small>
+                    {% for i in form.password2.errors %}
+                        <p class="font-weight-light text-danger d-block small text-center pb-0 mb-0">{{ i }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="id_phone" class="col-sm-2 col-form-label col-form-label-sm">Фио пользователя</label>
+                <div class="col-sm-6 input-group">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text"><i class="fas fa-phone"></i></div>
+                    </div>
+                    {{ p_form.full_name }}
+                    {{ info_form.full_name.errors }}
+                    {% for i in info_form.full_name.errors %}
+                        <p class="font-weight-light text-danger d-block small text-center pb-0 mb-0">{{ i }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <button class="btn btn-sm btn-outline-info mt-3" type="submit">Регистрация</button>
+        </form>
+    </div>
+{% endblock %}
