@@ -9,7 +9,7 @@ class UserInfo(models.Model):
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
     user = models.OneToOneField(User, on_delete=models.PROTECT, related_name='client', verbose_name='Пользователь')
-
+    phone = models.CharField(max_length=50, null=False, blank=False, verbose_name='Телефон пользователя')
     def __str__(self):
         return "%s" % self.user.username
 

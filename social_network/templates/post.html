@@ -3,7 +3,7 @@
 {% block title %}Post list{% endblock %}
 
 {% block content %}
-        <h1>Posts</h1>
+        <h1 class = "text-center">Posts</h1>
         {% for post in post_list %}
             <p>{{ post.post_user }}</p>
             <p>{{ post.post_subject }}</p>

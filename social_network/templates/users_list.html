@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Users list{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="border-bottom pb-2 pt-2 text-center">
+            <h2 class="font-weight-bold">Список пользователей</h2>
+        </div>
+        <ul class="list-group list-group-flush w-50">
+            {% for user in userinfo_list %}
+                <li class="list-group-item p-2"><a
+                        href="{% url 'user_detail' user.pk %}"
+                        class="text-decoration-none text-dark d-block">
+                    {{ forloop.counter }}. {{ user.user.username.capitalize }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
