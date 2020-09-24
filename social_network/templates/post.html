@@ -3,12 +3,12 @@
 {% block title %}Index{% endblock %}
 
 {% block content %}
-    <h1>Posts</h1>
-    {% for post in post_list %}
-        <p>{{ post.post_user }}</p>
-        <p>{{ post.post_subject }}</p>
-        <p>{{ post.post_body }}</p>
-        <p>{{ post.tag }}</p>
-        <hr>
-    {% endfor %}
+        <h1>Posts</h1>
+        {% for post in post_list %}
+            <p>{{ post.post_user }}</p>
+            <p>{{ post.post_subject }}</p>
+            <p>{{ post.post_body }}</p>
+            <p>{{ post.tag }}</p>
+            <hr>
+        {% endfor %}
 {% endblock %}

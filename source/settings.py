@@ -1,4 +1,5 @@
 import os
+from django.urls import reverse_lazy
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '*9f(8hk^4@6tu+o8^0&$au*z$f_-s36!ycz*daquxu2u#cv!)a'
@@ -68,3 +69,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 MEDIA_URL = '/uploads/'
 FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880
+
+LOGIN_URL = reverse_lazy('login')
+LOGIN_REDIRECT_URL = reverse_lazy('post_list')
+LOGOUT_REDIRECT_URL = reverse_lazy('login')
