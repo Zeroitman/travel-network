@@ -32,9 +32,6 @@ def register(request):
     if request.method == 'POST':
         form = UserForm(request.POST)
         p_form = UserInfoForm(request.POST)
-        # print(0, form)
-        # print(1, p_form)
-        print(p_form)
         if form.is_valid() and p_form.is_valid():
             user = form.save()
             user.save()
@@ -48,7 +45,6 @@ def register(request):
             messages.success(request, f'Пользователь {username} успешно зарегистрирован')
             return redirect('user_detail', pk=profile.pk)
         else:
-            pass
             messages.info(request, f'Ошибка регистрации')
     else:
         form = UserForm()

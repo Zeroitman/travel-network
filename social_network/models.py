@@ -8,8 +8,10 @@ class UserInfo(models.Model):
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
+
     user = models.OneToOneField(User, on_delete=models.PROTECT, related_name='client', verbose_name='Пользователь')
-    phone = models.CharField(max_length=50, null=False, blank=False, verbose_name='Телефон пользователя')
+    full_name = models.CharField(max_length=100, blank=False, verbose_name='ФИО пользователя')
+
     def __str__(self):
         return "%s" % self.user.username
 
@@ -29,4 +31,3 @@ class Post(models.Model):
 
     def __str__(self):
         return str(self.id)
-

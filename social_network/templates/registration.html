@@ -41,14 +41,14 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label for="id_phone" class="col-sm-2 col-form-label col-form-label-sm">Телефон</label>
+                <label for="id_phone" class="col-sm-2 col-form-label col-form-label-sm">Фио пользователя</label>
                 <div class="col-sm-6 input-group">
                     <div class="input-group-prepend">
                         <div class="input-group-text"><i class="fas fa-phone"></i></div>
                     </div>
-                    {{ p_form.phone }}
-                    {{ info_form.phone.errors }}
-                    {% for i in info_form.phone.errors %}
+                    {{ p_form.full_name }}
+                    {{ info_form.full_name.errors }}
+                    {% for i in info_form.full_name.errors %}
                         <p class="font-weight-light text-danger d-block small text-center pb-0 mb-0">{{ i }}</p>
                     {% endfor %}
                 </div>

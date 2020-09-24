@@ -31,11 +31,11 @@ class UserInfoForm(forms.ModelForm):
 
     class Meta:
         model = UserInfo
-        fields = ['phone']
+        fields = ['full_name']
         widgets = {
-            'phone': forms.TextInput(
+            'full_name': forms.TextInput(
                 attrs={'class': 'form-control form-control-sm shadow-none',
-                       'placeholder': 'Контакты'}),
+                       'placeholder': 'Фио пользователя'}),
         }
 
 
