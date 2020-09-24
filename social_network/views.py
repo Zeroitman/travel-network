@@ -1,14 +1,29 @@
 from django.shortcuts import redirect, render, get_object_or_404
-from django.views.generic import ListView, DetailView
+from django.urls import reverse
+from django.views.generic import ListView, DetailView, CreateView
 from django.contrib import messages
-from social_network.forms import UserInfoForm, UserForm
+from social_network.forms import UserInfoForm, UserForm, PostForm
 from social_network.models import Post, UserInfo
 
 
 class PostList(ListView):
     queryset = Post.objects.all()
     model = Post
-    template_name = 'post.html'
+    template_name = 'post_list.html'
+
+
+class PostCreateView(CreateView):
+    model = Post
+    template_name = 'post_create.html'
+    form_class = PostForm
+
+    def get_success_url(self):
+        return reverse('user_detail', kwargs={'pk': 1})
+
+
+class PostDetailView(DetailView):
+    model = Post
+    template_name = 'post_detail.html'
 
 
 class UserListView(ListView):

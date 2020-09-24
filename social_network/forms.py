@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.forms import UserCreationForm
-from social_network.models import UserInfo
+from social_network.models import UserInfo, Post
 
 
 class UserForm(UserCreationForm):
@@ -38,3 +38,8 @@ class UserInfoForm(forms.ModelForm):
         }
 
 
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        # exclude = []
+        fields = ['post_user', 'post_subject', 'post_body', 'tag']
