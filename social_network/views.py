@@ -1,4 +1,4 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.views.generic import ListView, DetailView
 from django.contrib import messages
 from social_network.forms import UserInfoForm, UserForm
@@ -50,3 +50,17 @@ def register(request):
         form = UserForm()
         p_form = UserInfoForm()
     return render(request, 'registration.html', {'form': form, 'p_form': p_form})
+
+
+def change_access_status(request, pk):
+    user = get_object_or_404(UserInfo, pk=pk)
+    user.access_status = False if user.access_status else True
+    user.save()
+    return redirect('users_list')
+
+
+def change_create_post_status(request, pk):
+    user = get_object_or_404(UserInfo, pk=pk)
+    user.create_post_status = False if user.create_post_status else True
+    user.save()
+    return redirect('users_list')

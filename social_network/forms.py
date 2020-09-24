@@ -28,7 +28,6 @@ class UserForm(UserCreationForm):
 
 
 class UserInfoForm(forms.ModelForm):
-
     class Meta:
         model = UserInfo
         fields = ['full_name']

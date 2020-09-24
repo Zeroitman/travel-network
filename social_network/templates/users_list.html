@@ -13,6 +13,18 @@
                         href="{% url 'user_detail' user.pk %}"
                         class="text-decoration-none text-dark d-block">
                     {{ forloop.counter }}. {{ user.user.username.capitalize }}</a>
+
+                    {% if request.user.is_superuser %}
+                        <div class="icons">
+                            {% if user.access_status %}
+                                <a href="{% url 'change_access_status' user.pk %}">Заблокировать</a>
+                            {% else %} <a href="{% url 'change_access_status' user.pk %}">Разблокировать</a>{% endif %}
+                            <br>
+                            {% if user.create_post_status %}
+                                <a href="{% url 'change_create_post_status' user.pk %}">Запретить создание постов</a>
+                            {% else %} <a href="{% url 'change_create_post_status' user.pk %}">Разрешить создание постов</a>{% endif %}
+                        </div>
+                    {% endif %}
                 </li>
             {% endfor %}
         </ul>

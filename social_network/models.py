@@ -11,6 +11,8 @@ class UserInfo(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.PROTECT, related_name='client', verbose_name='Пользователь')
     full_name = models.CharField(max_length=100, blank=False, verbose_name='ФИО пользователя')
+    create_post_status = models.BooleanField("Возможность создавать посты", default=True)
+    access_status = models.BooleanField("Статус доступа к приложению", default=True)
 
     def __str__(self):
         return "%s" % self.user.username
@@ -28,6 +30,7 @@ class Post(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
     image = models.ImageField(upload_to='post_images/', null=True, blank=True)
+    activity = models.BooleanField('Активность', default=True)
 
     def __str__(self):
         return str(self.id)

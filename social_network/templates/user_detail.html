@@ -7,6 +7,10 @@
             <h2 class="font-weight-bold">Просмотр профиля "{{ current_user.user.username }}"</h2>
         </div>
         <div class="d-block font-weight-bold mb-2">Логин: <span
-                class="font-weight-normal">{{ current_user.user.username }}</span></div>
+                class="font-weight-normal">{{ current_user.user.username }}</span>
+        </div>
+        <div class="d-block font-weight-bold mb-2">ФИО: <span
+                class="font-weight-normal">{{ current_user.full_name }}</span>
+        </div>
     </div>
 {% endblock %}
