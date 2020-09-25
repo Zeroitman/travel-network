@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView
@@ -16,7 +17,7 @@ class PostList(ListView):
         return Post.objects.filter(activity=True)
 
 
-class PostCreateView(CreateView):
+class PostCreateView(CreateView, LoginRequiredMixin):
     model = Post
     template_name = 'post_create.html'
     form_class = PostForm
@@ -25,17 +26,17 @@ class PostCreateView(CreateView):
         return reverse('post_detail', kwargs={'pk': self.object})
 
 
-class PostDetailView(DetailView):
+class PostDetailView(DetailView, LoginRequiredMixin):
     model = Post
     template_name = 'post_detail.html'
 
 
-class UserListView(ListView):
+class UserListView(ListView, LoginRequiredMixin):
     model = UserInfo
     template_name = 'users_list.html'
 
 
-class UserDetailView(DetailView):
+class UserDetailView(DetailView, LoginRequiredMixin):
     model = UserInfo
     template_name = 'user_detail.html'
 

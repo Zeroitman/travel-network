@@ -2,7 +2,7 @@
 {% block title %}Post list{% endblock %}
 {% block content %}
     <div class="list-group">
-        {% if not request.user.is_superuser %}
+        {% if user.is_authenticated and not request.user.is_superuser %}
             <a role="button" class="btn btn-success mr-2 btn-sm" id="program_add"
                href="{% url 'post_create' %}">
                             <span class="text-decoration-none text-dark"
@@ -16,14 +16,14 @@
                 {% if post.activity %}
                     <a href="{% url 'change_post_status' post.pk %}">Отключить в ленте</a>
                 {% else %} <a href="{% url 'change_post_status' post.pk %}">Включить в ленте</a>{% endif %}
-            {% else %}
+            {% elif user.is_authenticated %}
                 <div class="btn-group" role="group" aria-label="Basic example">
-                    <button type="button" class="btn btn-secondary"><a class="text-light"
-                                                                       href="{% url 'increase_post_rating' post.pk %}">Поднять
-                        рейтинг</a></button>
-                    <button type="button" class="btn btn-secondary"><a class="text-light"
-                                                                       href="{% url 'decrease_post_rating' post.pk %}">Опустить
-                        рейтинг</a></button>
+                    <button type="button" class="btn btn-secondary">
+                        <a class="text-light" href="{% url 'increase_post_rating' post.pk %}">Поднять рейтинг</a>
+                    </button>
+                    <button type="button" class="btn btn-secondary">
+                        <a class="text-light" href="{% url 'decrease_post_rating' post.pk %}">Опустить рейтинг</a>
+                    </button>
                 </div>
             {% endif %}
             <a href="{% url 'post_detail' post.pk %}" class="list-group-item list-group-item-action m-1">

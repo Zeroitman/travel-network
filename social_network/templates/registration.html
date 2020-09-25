@@ -13,9 +13,7 @@
                 <label for="id_username" class="col-sm-2 col-form-label col-form-label-sm">Логин</label>
                 <div class="col-sm-6">
                     {{ form.username }}
-                    <small class="form-text text-muted">Обязательное поле. Не более 150 символов. Только буквы, цифры и
-                        символы @/./+/-/_.
-                    </small>
+                    <small class="form-text text-muted">Обязательное поле</small>
                 </div>
             </div>
             <div class="form-group row">
@@ -23,7 +21,7 @@
                 <div class="col-sm-6">
                     <input type="password" id="id_password1" name="password1" required
                            class="form-control form-control-sm shadow-none" placeholder="Введите пароль">
-                    <small class="form-text text-muted">Не менее 8 символов</small>
+                    <small class="form-text text-muted">Обязательное поле</small>
                     {% for i in form.password1.errors %}
                         <p class="font-weight-light text-danger d-block small text-center pb-0 mb-0">{{ i }}</p>
                     {% endfor %}
@@ -34,7 +32,7 @@
                 <div class="col-sm-6">
                     <input type="password" id="id_password2" name="password2" required
                            class="form-control form-control-sm shadow-none" placeholder="Подтвердите пароль">
-                    <small class="form-text text-muted">Подтвердите пароль</small>
+                    <small class="form-text text-muted">Обязательное поле</small>
                     {% for i in form.password2.errors %}
                         <p class="font-weight-light text-danger d-block small text-center pb-0 mb-0">{{ i }}</p>
                     {% endfor %}
@@ -43,9 +41,6 @@
             <div class="form-group row">
                 <label for="id_phone" class="col-sm-2 col-form-label col-form-label-sm">Фио пользователя</label>
                 <div class="col-sm-6 input-group">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text"><i class="fas fa-phone"></i></div>
-                    </div>
                     {{ p_form.full_name }}
                     {{ info_form.full_name.errors }}
                     {% for i in info_form.full_name.errors %}
