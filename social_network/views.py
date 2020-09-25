@@ -7,9 +7,13 @@ from social_network.models import Post, UserInfo
 
 
 class PostList(ListView):
-    queryset = Post.objects.all()
     model = Post
     template_name = 'post_list.html'
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return Post.objects.all()
+        return Post.objects.filter(activity=True)
 
 
 class PostCreateView(CreateView):
@@ -18,7 +22,7 @@ class PostCreateView(CreateView):
     form_class = PostForm
 
     def get_success_url(self):
-        return reverse('user_detail', kwargs={'pk': 1})
+        return reverse('post_detail', kwargs={'pk': self.object})
 
 
 class PostDetailView(DetailView):
@@ -68,14 +72,24 @@ def register(request):
 
 
 def change_access_status(request, pk):
-    user = get_object_or_404(UserInfo, pk=pk)
-    user.access_status = False if user.access_status else True
-    user.save()
+    if request.user.is_superuser:
+        user = get_object_or_404(UserInfo, pk=pk)
+        user.access_status = False if user.access_status else True
+        user.save()
     return redirect('users_list')
 
 
 def change_create_post_status(request, pk):
-    user = get_object_or_404(UserInfo, pk=pk)
-    user.create_post_status = False if user.create_post_status else True
-    user.save()
+    if request.user.is_superuser:
+        user = get_object_or_404(UserInfo, pk=pk)
+        user.create_post_status = False if user.create_post_status else True
+        user.save()
     return redirect('users_list')
+
+
+def change_post_status(request, pk):
+    if request.user.is_superuser:
+        post = get_object_or_404(Post, pk=pk)
+        post.activity = False if post.activity else True
+        post.save()
+    return redirect('post_list')

@@ -31,6 +31,7 @@ class Post(models.Model):
     last_modified = models.DateTimeField(auto_now=True)
     image = models.ImageField(upload_to='post_images/', null=True, blank=True)
     activity = models.BooleanField('Активность', default=True)
+    rating = models.SmallIntegerField("Рейтинг поста", default=0)
 
     def __str__(self):
         return str(self.id)

@@ -1,23 +1,34 @@
 {% extends "base.html" %}
-
 {% block title %}Post list{% endblock %}
-
 {% block content %}
     <div class="list-group">
+        {% if not request.user.is_superuser %}
+            <a role="button" class="btn btn-success mr-2 btn-sm" id="program_add"
+               href="{% url 'post_create' %}">
+                            <span class="text-decoration-none text-dark"
+                                  style="font-size: 12px">Добавить пост</span>
+            </a>
+        {% endif %}
         <div class="text-center"><h2>Список постов</h2></div>
         <br>
-        {% for c in post_list %}
-            <a href="{% url 'post_detail' c.pk %}" class="list-group-item list-group-item-action m-1">
+        {% for post in post_list %}
+            {% if request.user.is_superuser %}
+                {% if post.activity %}
+                    <a href="{% url 'change_post_status' post.pk %}">Отключить в ленте</a>
+                {% else %} <a href="{% url 'change_post_status' post.pk %}">Включить в ленте</a>{% endif %}
+            {% endif %}
+            <a href="{% url 'post_detail' post.pk %}" class="list-group-item list-group-item-action m-1">
                 <div class="d-flex w-100 justify-content-between">
-                    <h5 class="font-weight-bolder">{{ c.post_subject }}</h5>
-                    <small>Автор: {{ c.post_user }}</small>
+                    <h5 class="font-weight-bolder">{{ post.post_subject }}</h5>
+                    <small>Автор: {{ post.post_user }}</small>
                 </div>
-                {% if c.tag %}
-                    <p class="font-weight-normal d-block">Тэги: {{ c.tag }}</p>
+                {% if post.tag %}
+                    <p class="font-weight-normal d-block">Тэги: {{ post.tag }}</p>
                 {% else %} <p class="font-weight-normal">Нет тэгов</p>
                 {% endif %}
-                <small class="d-block">Дата написания: {{ c.created_date.date }}</small>
+                <small class="d-block">Дата написания: {{ post.created_date.date }}</small>
             </a>
+            <hr>
         {% endfor %}
     </div>
 {% endblock %}
