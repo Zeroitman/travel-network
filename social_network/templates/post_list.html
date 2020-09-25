@@ -16,16 +16,26 @@
                 {% if post.activity %}
                     <a href="{% url 'change_post_status' post.pk %}">Отключить в ленте</a>
                 {% else %} <a href="{% url 'change_post_status' post.pk %}">Включить в ленте</a>{% endif %}
+            {% else %}
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-secondary"><a class="text-light"
+                                                                       href="{% url 'increase_post_rating' post.pk %}">Поднять
+                        рейтинг</a></button>
+                    <button type="button" class="btn btn-secondary"><a class="text-light"
+                                                                       href="{% url 'decrease_post_rating' post.pk %}">Опустить
+                        рейтинг</a></button>
+                </div>
             {% endif %}
             <a href="{% url 'post_detail' post.pk %}" class="list-group-item list-group-item-action m-1">
                 <div class="d-flex w-100 justify-content-between">
                     <h5 class="font-weight-bolder">{{ post.post_subject }}</h5>
-                    <small>Автор: {{ post.post_user }}</small>
+                    <small>Рейтинг: {{ post.rating }}</small>
                 </div>
                 {% if post.tag %}
                     <p class="font-weight-normal d-block">Тэги: {{ post.tag }}</p>
                 {% else %} <p class="font-weight-normal">Нет тэгов</p>
                 {% endif %}
+                <small>Автор: {{ post.post_user }}</small>
                 <small class="d-block">Дата написания: {{ post.created_date.date }}</small>
             </a>
             <hr>

@@ -93,3 +93,19 @@ def change_post_status(request, pk):
         post.activity = False if post.activity else True
         post.save()
     return redirect('post_list')
+
+
+def increase_post_rating(request, pk):
+    if not request.user.is_superuser and request.user:
+        post = get_object_or_404(Post, pk=pk)
+        post.rating += 1
+        post.save()
+    return redirect('post_list')
+
+
+def decrease_post_rating(request, pk):
+    if not request.user.is_superuser and request.user:
+        post = get_object_or_404(Post, pk=pk)
+        post.rating -= 1
+        post.save()
+    return redirect('post_list')
