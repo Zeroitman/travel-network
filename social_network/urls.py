@@ -1,8 +1,5 @@
 from django.urls import path
-from social_network.views import \
-    (PostList, PostCreateView, PostDetailView, change_post_status, increase_post_rating, decrease_post_rating,
-     UserListView, UserDetailView,
-     change_access_status, change_create_post_status)
+from social_network.views import *
 
 urlpatterns = [
     path('post-list', PostList.as_view(), name='post_list'),
@@ -15,4 +12,6 @@ urlpatterns = [
     path('user/<int:pk>/detail', UserDetailView.as_view(), name='user_detail'),
     path('user/<int:pk>/change_access_status', change_access_status, name='change_access_status'),
     path('user/<int:pk>/change_create_post_status', change_create_post_status, name='change_create_post_status'),
+    #     api-----------------------------------------------------------------------------------------------------------
+    path('api/create-post', CreatePostViewSet.as_view(), name='api_create_post')
 ]
