@@ -1,0 +1,50 @@
+version: '3.3'
+
+services:
+  travel-network-db:
+    container_name: travel-network-db
+    image: postgres:11
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: es5579a468kmrd
+      POSTGRES_USER: docker_user
+      POSTGRES_DB: db_for_docker
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+
+  web:
+    build: .
+    command: sh -c "python manage.py migrate &&
+                    python manage.py collectstatic --no-input &&
+                    python manage.py loaddata fixtures/users.json &&
+                    gunicorn source.wsgi -b 0.0.0.0:9090"
+    depends_on:
+      - travel-network-db
+    environment:
+      - DB_HOST=travel-network-db
+      - DB_USER=docker_user
+      - DB_PASS=es5579a468kmrd
+      - DB_NAME=db_for_docker
+      - DB_PORT=5432
+      - API_SECURE_KEY=zwNQlFuZVvESmGnm9AfHzVY2QAvASOLYJXlrlEDTXOzXr9I201
+    volumes:
+      - ./static:/static
+
+  nginx-travel:
+      restart: always
+      image: nginx:alpine
+      container_name: nginx-travel
+      depends_on:
+        - web
+      volumes:
+        - ./default.conf:/etc/nginx/conf.d/default.conf
+        - ./static:/etc/nginx/conf.d/static
+      environment:
+        TZ: "Asia/Bishkek"
+      ports:
+        - 9090:9090
+      logging:
+          driver: "json-file"
+          options:
+              max-file: "5"
+              max-size: "100m"
