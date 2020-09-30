@@ -29,7 +29,7 @@ class PostCreateView(CreateView, LoginRequiredMixin):
         return reverse('post_detail', kwargs={'pk': self.object})
 
     def form_valid(self, form):
-        form.instance.post_user = self.request.user
+        form.instance.post_user = UserInfo.objects.get(user=self.request.user)
         return super().form_valid(form)
 
 

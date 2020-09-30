@@ -10,7 +10,7 @@
         <ul class="list-group list-group-flush w-50">
             {% for user_id, post_count in post_count.items %}
                 {% for user in userinfo_list %}
-                    {% if user_id == user.pk  and request.user.is_superuser %}
+                    {% if user_id == user.pk %}
                         <li class="list-group-item p-2"><a
                             href="{% url 'user_detail' user.pk %}"
                             class="text-decoration-none text-dark d-block">

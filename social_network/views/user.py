@@ -15,7 +15,6 @@ class UserListView(ListView, LoginRequiredMixin):
     template_name = 'user/users_list.html'
 
     def get_context_data(self, *, object_list=None, **kwargs):
-
         context = super().get_context_data(**kwargs)
         users_posts = {}
         for a in UserInfo.objects.all():
