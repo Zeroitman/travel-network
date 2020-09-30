@@ -34,9 +34,20 @@
         {% endif %}
         <a href="{% url 'create_comment' %}"><i class="fas fa-comment"></i></a>
         <hr>
+        <div class="border-bottom pb-2 pt-2 text-center">
+            <h2 class="font-weight-bold">Комментарии</h2>
+        </div>
         {% for comment in post.comments.all %}
             <div class="class mt-2 ml-2">
-                {{ comment.user_nickname }}:{{ comment.text }}
+                <div class="d-block font-weight-bold mb-2">Автор: <span
+                        class="font-weight-normal">{{ comment.user_nickname }}</span>
+                </div>
+                <div class="d-block font-weight-bold mb-2">Комментарий: <span
+                        class="font-weight-normal">{{ comment.text }}</span>
+                </div>
+                <div class="d-block font-weight-bold mb-2">Дата и время коммента: <span
+                        class="font-weight-normal">{{ comment.start_date }}</span>
+                </div>
                 <hr>
             </div>
         {% endfor %}
