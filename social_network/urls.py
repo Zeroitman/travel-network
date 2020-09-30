@@ -2,6 +2,7 @@ from django.urls import path
 from social_network.views.post import *
 from social_network.views.comment import *
 from social_network.views.user import *
+from social_network.views.country import *
 
 urlpatterns = [
     # post--------------------------------------------------------------------------------------------------------------
@@ -21,5 +22,8 @@ urlpatterns = [
     path('users-list/', UserListView.as_view(), name='users_list'),
     path('user/<int:pk>/detail', UserDetailView.as_view(), name='user_detail'),
     path('user/<int:pk>/change_access_status', change_access_status, name='change_access_status'),
-    path('api/user', users, name='get_users')
+    path('api/user', users, name='get_users'),
+    # country-----------------------------------------------------------------------------------------------------------
+    # path('countries-list/', CountryDetailView.as_view(), name='users_list'),
+    path('country/<int:pk>/detail', CountryDetailView.as_view(), name='country_detail'),
 ]

@@ -8,7 +8,11 @@ def save_countries(apps, schema_editor):
     countries = apps.get_model('social_network', 'Country')
     api_countries = requests.get(url='https://restcountries.eu/rest/v2/all', timeout=20).json()
     for country in api_countries:
-        countries(name=country.get("name")).save()
+        countries(name=country.get("name"),
+                  capital=country.get("capital"),
+                  region=country.get("region"),
+                  population=str(country.get('population'))
+                  ).save()
 
 
 class Migration(migrations.Migration):

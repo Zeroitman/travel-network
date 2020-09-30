@@ -55,6 +55,9 @@ class Country(models.Model):
         verbose_name = 'Страна'
         verbose_name_plural = 'Страны'
     name = models.CharField(verbose_name="Название страны", max_length=500)
+    capital = models.CharField(verbose_name="Столица", max_length=500)
+    region = models.CharField(verbose_name="Регион", max_length=500)
+    population = models.CharField(verbose_name="Население", max_length=500)
 
     def __str__(self):
         return self.name

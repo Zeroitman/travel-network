@@ -32,6 +32,9 @@
                     class="font-weight-normal">Тэги отсутствуют</span>
             </div>
         {% endif %}
+        <div class="d-block font-weight-bold mb-2">Страна: <span
+                class="font-weight-normal"><a href="{% url 'country_detail' post.post_country.pk %}">{{post.post_country.name }}</a></span>
+        </div>
         {% if user.is_authenticated and not request.user.is_superuser %}
             <a href="{% url 'create_comment' %}"><i class="fas fa-comment"></i></a>
         {% endif %}
