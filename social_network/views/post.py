@@ -1,21 +1,18 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import User
-from django.shortcuts import redirect, render, get_object_or_404
-from django.urls import reverse, reverse_lazy
+from django.shortcuts import redirect, get_object_or_404
+from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView
-from django.contrib import messages
 from rest_framework import status
 from rest_framework.decorators import api_view
-from social_network.forms import UserInfoForm, UserForm, PostForm, CommentForm
+from social_network.forms.post import PostForm
 from social_network.models import *
-from social_network.serializers import PostSerializer, UserSerializer
-from source.constants import API_SECURE_KEY
+from social_network.serializers.post import PostSerializer
 from source.utils import MediaResponse
 
 
 class PostList(ListView):
     model = Post
-    template_name = 'post_list.html'
+    template_name = 'post/post_list.html'
 
     def get_queryset(self):
         if self.request.user.is_superuser:
@@ -25,7 +22,7 @@ class PostList(ListView):
 
 class PostCreateView(CreateView, LoginRequiredMixin):
     model = Post
-    template_name = 'post_create.html'
+    template_name = 'post/post_create.html'
     form_class = PostForm
 
     def get_success_url(self):
@@ -34,56 +31,7 @@ class PostCreateView(CreateView, LoginRequiredMixin):
 
 class PostDetailView(DetailView, LoginRequiredMixin):
     model = Post
-    template_name = 'post_detail.html'
-
-
-class UserListView(ListView, LoginRequiredMixin):
-    model = UserInfo
-    template_name = 'users_list.html'
-
-
-class UserDetailView(DetailView, LoginRequiredMixin):
-    model = UserInfo
-    template_name = 'user_detail.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        now_pk = int(self.kwargs.get('pk'))
-        current_user = UserInfo.objects.get(id=now_pk)
-        context['current_user'] = current_user
-        return context
-
-
-def register(request):
-    if request.method == 'POST':
-        form = UserForm(request.POST)
-        p_form = UserInfoForm(request.POST)
-        if form.is_valid() and p_form.is_valid():
-            user = form.save()
-            user.save()
-            profile = p_form.save(commit=False)
-            profile.user_id = user.pk
-            profile.save()
-            group = form.cleaned_data.pop('groups')
-            for user_group in group:
-                user.groups.add(user_group)
-            username = form.cleaned_data.get('username')
-            messages.success(request, f'Пользователь {username} успешно зарегистрирован')
-            return redirect('user_detail', pk=profile.pk)
-        else:
-            messages.info(request, f'Ошибка регистрации')
-    else:
-        form = UserForm()
-        p_form = UserInfoForm()
-    return render(request, 'registration.html', {'form': form, 'p_form': p_form})
-
-
-def change_access_status(request, pk):
-    if request.user.is_superuser:
-        user = get_object_or_404(UserInfo, pk=pk)
-        user.access_status = False if user.access_status else True
-        user.save()
-    return redirect('users_list')
+    template_name = 'post/post_detail.html'
 
 
 def change_create_post_status(request, pk):
@@ -124,34 +72,21 @@ def decrease_post_rating(request, pk):
     return redirect('post_list')
 
 
-class CommentCreateView(CreateView):
-    model = Comments
-    template_name = 'article_comment_add.html'
-    form_class = CommentForm
-    success_url = reverse_lazy('post_list')
-
-
 # ----------------------------------------------------------------------------------------------------------------------
 @api_view(['POST'])
 def api_increase_post_rating(request, pk):
-    # if request.headers.get('API-SECURE-KEY') != API_SECURE_KEY:
-    #     return MediaResponse("FAIL", "INVALID_SECURE_KEY", code=status.HTTP_400_BAD_REQUEST)
     if change_rating(request, pk):
         return MediaResponse("SUCCESS", "RATINGS_INCREASED", code=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
 def api_decrease_post_rating(request, pk):
-    # if request.headers.get('API-SECURE-KEY') != API_SECURE_KEY:
-    #     return MediaResponse("FAIL", "INVALID_SECURE_KEY", code=status.HTTP_400_BAD_REQUEST)
     if change_rating(request, pk, False):
         return MediaResponse("SUCCESS", "RATINGS_DECREASED", code=status.HTTP_200_OK)
 
 
 @api_view(['POST', 'GET'])
 def post(request):
-    # if request.headers.get('API-SECURE-KEY') != API_SECURE_KEY:
-    #     return MediaResponse("FAIL", "INVALID_SECURE_KEY", code=status.HTTP_400_BAD_REQUEST)
     if request.method == 'POST':
         user_id = request.data.get('post_user')
         user = User.objects.filter(pk=user_id).first()
@@ -173,10 +108,3 @@ def post(request):
     return MediaResponse("SUCCESS", details="NO_DATA", code=status.HTTP_200_OK, result=[])
 
 
-@api_view(['GET'])
-def users(request):
-    # if request.headers.get('API-SECURE-KEY') != API_SECURE_KEY:
-    #     return MediaResponse("FAIL", "INVALID_SECURE_KEY", code=status.HTTP_400_BAD_REQUEST)
-    serializer = UserSerializer(UserInfo.objects.all(), many=True)
-    if serializer.data:
-        return MediaResponse("SUCCESS", "", code=status.HTTP_200_OK, result=serializer.data)
