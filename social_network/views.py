@@ -1,13 +1,13 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.shortcuts import redirect, render, get_object_or_404
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView
 from django.contrib import messages
 from rest_framework import status
 from rest_framework.decorators import api_view
-from social_network.forms import UserInfoForm, UserForm, PostForm
-from social_network.models import Post, UserInfo
+from social_network.forms import UserInfoForm, UserForm, PostForm, CommentForm
+from social_network.models import *
 from social_network.serializers import PostSerializer, UserSerializer
 from source.constants import API_SECURE_KEY
 from source.utils import MediaResponse
@@ -102,6 +102,52 @@ def change_post_status(request, pk):
     return redirect('post_list')
 
 
+def change_rating(request, pk, up=True):
+    if not request.user.is_superuser and request.user:
+        post = get_object_or_404(Post, pk=pk)
+        if up:
+            post.rating += 1
+        else:
+            post.rating -= 1
+        post.save()
+        return True
+    return False
+
+
+def increase_post_rating(request, pk):
+    change_rating(request, pk)
+    return redirect('post_list')
+
+
+def decrease_post_rating(request, pk):
+    change_rating(request, pk, False)
+    return redirect('post_list')
+
+
+class CommentCreateView(CreateView):
+    model = Comments
+    template_name = 'article_comment_add.html'
+    form_class = CommentForm
+    success_url = reverse_lazy('post_list')
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+@api_view(['POST'])
+def api_increase_post_rating(request, pk):
+    # if request.headers.get('API-SECURE-KEY') != API_SECURE_KEY:
+    #     return MediaResponse("FAIL", "INVALID_SECURE_KEY", code=status.HTTP_400_BAD_REQUEST)
+    if change_rating(request, pk):
+        return MediaResponse("SUCCESS", "RATINGS_INCREASED", code=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def api_decrease_post_rating(request, pk):
+    # if request.headers.get('API-SECURE-KEY') != API_SECURE_KEY:
+    #     return MediaResponse("FAIL", "INVALID_SECURE_KEY", code=status.HTTP_400_BAD_REQUEST)
+    if change_rating(request, pk, False):
+        return MediaResponse("SUCCESS", "RATINGS_DECREASED", code=status.HTTP_200_OK)
+
+
 @api_view(['POST', 'GET'])
 def post(request):
     # if request.headers.get('API-SECURE-KEY') != API_SECURE_KEY:
@@ -134,42 +180,3 @@ def users(request):
     serializer = UserSerializer(UserInfo.objects.all(), many=True)
     if serializer.data:
         return MediaResponse("SUCCESS", "", code=status.HTTP_200_OK, result=serializer.data)
-
-
-def change_rating(request, pk, up=True):
-    if not request.user.is_superuser and request.user:
-        post = get_object_or_404(Post, pk=pk)
-        if up:
-            post.rating += 1
-        else:
-            post.rating -= 1
-        post.save()
-        return True
-    return False
-
-
-def increase_post_rating(request, pk):
-    change_rating(request, pk)
-    return redirect('post_list')
-
-
-def decrease_post_rating(request, pk):
-    change_rating(request, pk, False)
-    return redirect('post_list')
-
-
-@api_view(['POST'])
-def api_increase_post_rating(request, pk):
-    # if request.headers.get('API-SECURE-KEY') != API_SECURE_KEY:
-    #     return MediaResponse("FAIL", "INVALID_SECURE_KEY", code=status.HTTP_400_BAD_REQUEST)
-    if change_rating(request, pk):
-        return MediaResponse("SUCCESS", "RATINGS_INCREASED", code=status.HTTP_200_OK)
-
-
-@api_view(['POST'])
-def api_decrease_post_rating(request, pk):
-    print("Her")
-    # if request.headers.get('API-SECURE-KEY') != API_SECURE_KEY:
-    #     return MediaResponse("FAIL", "INVALID_SECURE_KEY", code=status.HTTP_400_BAD_REQUEST)
-    if change_rating(request, pk, False):
-        return MediaResponse("SUCCESS", "RATINGS_DECREASED", code=status.HTTP_200_OK)

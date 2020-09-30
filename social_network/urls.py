@@ -4,6 +4,7 @@ from social_network.views import *
 urlpatterns = [
     path('post-list', PostList.as_view(), name='post_list'),
     path('post-create', PostCreateView.as_view(), name='post_create'),
+    path('post-comment-create/add', CommentCreateView.as_view(), name='create_comment'),
     path('post/<int:pk>/detail', PostDetailView.as_view(), name='post_detail'),
     path('post/<str:pk>/change_post_status', change_post_status, name='change_post_status'),
     path('post/<str:pk>/increase_post_rating', increase_post_rating, name='increase_post_rating'),

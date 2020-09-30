@@ -35,3 +35,14 @@ class Post(models.Model):
 
     def __str__(self):
         return str(self.id)
+
+
+class Comments(models.Model):
+    user_nickname = models.ForeignKey('UserInfo', on_delete=models.CASCADE, related_name='comments')
+    article = models.ForeignKey('Post', on_delete=models.CASCADE, related_name='comments')
+    text = models.TextField(max_length=100000, null=True, verbose_name="Текст комментария")
+    start_date = models.DateField(verbose_name="Время создания комментария")
+    comment = models.ForeignKey('self', blank=True, null=True, on_delete=models.PROTECT, related_name='comments')
+
+    def __str__(self):
+        return "%s. %s. %s" % (self.pk, self.user_nickname, self.comment)

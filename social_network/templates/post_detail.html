@@ -32,5 +32,13 @@
                     class="font-weight-normal">Тэги отсутствуют</span>
             </div>
         {% endif %}
+        <a href="{% url 'create_comment' %}"><i class="fas fa-comment"></i></a>
+        <hr>
+        {% for comment in post.comments.all %}
+            <div class="class mt-2 ml-2">
+                {{ comment.user_nickname }}:{{ comment.text }}
+                <hr>
+            </div>
+        {% endfor %}
     </div>
 {% endblock %}
