@@ -12,5 +12,16 @@
         <div class="d-block font-weight-bold mb-2">ФИО: <span
                 class="font-weight-normal">{{ current_user.full_name }}</span>
         </div>
+
+        <div class="d-block font-weight-bold mb-2">Создание постов:
+            {% if current_user.create_post_status %}
+                <span class="font-weight-normal">Доступно</span>
+            {% else %} <span class="font-weight-normal">Заблокировано</span>{% endif %}
+        </div>
+        <div class="d-block font-weight-bold mb-2">Доступ к блоку:
+            {% if current_user.access_status %}
+                <span class="font-weight-normal">Открыт</span>
+            {% else %} <span class="font-weight-normal">Закрыт</span>{% endif %}
+        </div>
     </div>
 {% endblock %}

@@ -32,7 +32,9 @@
                     class="font-weight-normal">Тэги отсутствуют</span>
             </div>
         {% endif %}
-        <a href="{% url 'create_comment' %}"><i class="fas fa-comment"></i></a>
+        {% if user.is_authenticated and not request.user.is_superuser %}
+            <a href="{% url 'create_comment' %}"><i class="fas fa-comment"></i></a>
+        {% endif %}
         <hr>
         <div class="border-bottom pb-2 pt-2 text-center">
             <h2 class="font-weight-bold">Комментарии</h2>

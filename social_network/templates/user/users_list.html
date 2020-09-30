@@ -13,7 +13,6 @@
                         href="{% url 'user_detail' user.pk %}"
                         class="text-decoration-none text-dark d-block">
                     {{ forloop.counter }}. {{ user.user.username.capitalize }}</a>
-
                     {% if request.user.is_superuser %}
                         <div class="icons">
                             {% if user.access_status %}
