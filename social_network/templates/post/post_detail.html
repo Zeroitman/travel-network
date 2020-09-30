@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Страница поста{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="border-bottom pb-2 pt-2 text-center">
+            <h2 class="font-weight-bold">Просмотр поста "{{ post.post_subject }}"</h2>
+        </div>
+        {% if post.image %}
+            <img class="card-img-top" src="{{ post.image.url }}" alt="Card image cap">
+            <hr>
+        {% endif %}
+
+        <div class="d-block font-weight-bold mb-2">Автор: <span
+                class="font-weight-normal">{{ post.post_user }}</span>
+        </div>
+        <div class="d-block font-weight-bold mb-2">Описание: <span
+                class="font-weight-normal">{{ post.post_body }}</span>
+        </div>
+        <div class="d-block font-weight-bold mb-2">Дата написания: <span
+                class="font-weight-normal">{{ post.created_date.date }}</span>
+        </div>
+        <div class="d-block font-weight-bold mb-2">Текущий рейтинг: <span
+                class="font-weight-normal">{{ post.rating }}</span>
+        </div>
+        {% if post.tag %}
+            <div class="d-block font-weight-bold mb-2">Тэги: <span
+                    class="font-weight-normal">{{ post.tag }}</span>
+            </div>
+        {% else %}
+            <div class="d-block font-weight-bold mb-2">Тэги: <span
+                    class="font-weight-normal">Тэги отсутствуют</span>
+            </div>
+        {% endif %}
+        <a href="{% url 'create_comment' %}"><i class="fas fa-comment"></i></a>
+        <hr>
+        {% for comment in post.comments.all %}
+            <div class="class mt-2 ml-2">
+                {{ comment.user_nickname }}:{{ comment.text }}
+                <hr>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

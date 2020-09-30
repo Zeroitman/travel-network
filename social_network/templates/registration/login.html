@@ -12,8 +12,13 @@
 </head>
 <body>
 <div class="container">
-    <div class="text-center">
-        <a class="navbar-brand text-dark" href="{% url 'post_list' %}">На главную</a>
+    <div class="btn-group text-center" role="group" aria-label="Basic example">
+        <button type="button" class="btn btn-secondary">
+            <a class="text-light" href="{% url 'post_list' %}">На главную</a>
+        </button>
+        <button type="button" class="btn btn-secondary">
+            <a class="text-light" href="{% url 'register' %}">Регистрация</a>
+        </button>
     </div>
     <h1 class="text-center">Вход</h1>
     <form action="{% url 'login' %}" method="post">

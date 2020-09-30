@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
-{% load static %}
-{% block title %} Создание поста {% endblock %}
 {% block content %}
-    <form action="{% url 'post_create' %}" method="post" enctype="multipart/form-data">
+    <h1>Новый комментарий</h1>
+    <form action="{% url 'create_comment' %}" method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit" class="btn btn-primary">Сохранить</button>

@@ -13,6 +13,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'social_network',
 ]
 
@@ -47,8 +48,12 @@ WSGI_APPLICATION = 'source.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ.get('DB_NAME', 'db_for_docker'),
+        'USER': os.environ.get('DB_USER', 'docker_user'),
+        'PASSWORD': os.environ.get('DB_PASS', 'es5579a468kmrd'),
+        'HOST': os.environ.get('DB_HOST', 'travel-network-db'),
+        'PORT': os.environ.get('DB_PORT', '5432'),
     }
 }
 

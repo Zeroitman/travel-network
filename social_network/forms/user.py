@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.forms import UserCreationForm
-from social_network.models import UserInfo, Post
+from social_network.models import UserInfo
 
 
 class UserForm(UserCreationForm):
@@ -34,12 +34,5 @@ class UserInfoForm(forms.ModelForm):
         widgets = {
             'full_name': forms.TextInput(
                 attrs={'class': 'form-control form-control-sm shadow-none',
-                       'placeholder': 'Фио пользователя'}),
+                       'placeholder': 'Введите Фио'}),
         }
-
-
-class PostForm(forms.ModelForm):
-    class Meta:
-        model = Post
-        # exclude = []
-        fields = ['post_user', 'post_subject', 'post_body', 'tag']

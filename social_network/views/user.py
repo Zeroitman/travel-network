@@ -1,39 +1,23 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render, get_object_or_404
-from django.urls import reverse
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView
 from django.contrib import messages
-from social_network.forms import UserInfoForm, UserForm, PostForm
-from social_network.models import Post, UserInfo
+from rest_framework import status
+from rest_framework.decorators import api_view
+from social_network.forms.user import UserInfoForm, UserForm
+from social_network.models import UserInfo
+from social_network.serializers.user import UserSerializer
+from source.utils import MediaResponse
 
 
-class PostList(ListView):
-    queryset = Post.objects.all()
-    model = Post
-    template_name = 'post_list.html'
-
-
-class PostCreateView(CreateView):
-    model = Post
-    template_name = 'post_create.html'
-    form_class = PostForm
-
-    def get_success_url(self):
-        return reverse('user_detail', kwargs={'pk': 1})
-
-
-class PostDetailView(DetailView):
-    model = Post
-    template_name = 'post_detail.html'
-
-
-class UserListView(ListView):
+class UserListView(ListView, LoginRequiredMixin):
     model = UserInfo
-    template_name = 'users_list.html'
+    template_name = 'user/users_list.html'
 
 
-class UserDetailView(DetailView):
+class UserDetailView(DetailView, LoginRequiredMixin):
     model = UserInfo
-    template_name = 'user_detail.html'
+    template_name = 'user/user_detail.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -67,15 +51,16 @@ def register(request):
     return render(request, 'registration.html', {'form': form, 'p_form': p_form})
 
 
+@api_view(['GET'])
+def users(request):
+    serializer = UserSerializer(UserInfo.objects.all(), many=True)
+    if serializer.data:
+        return MediaResponse("SUCCESS", "", code=status.HTTP_200_OK, result=serializer.data)
+
+
 def change_access_status(request, pk):
-    user = get_object_or_404(UserInfo, pk=pk)
-    user.access_status = False if user.access_status else True
-    user.save()
-    return redirect('users_list')
-
-
-def change_create_post_status(request, pk):
-    user = get_object_or_404(UserInfo, pk=pk)
-    user.create_post_status = False if user.create_post_status else True
-    user.save()
+    if request.user.is_superuser:
+        user = get_object_or_404(UserInfo, pk=pk)
+        user.access_status = False if user.access_status else True
+        user.save()
     return redirect('users_list')
