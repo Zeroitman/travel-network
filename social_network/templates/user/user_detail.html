@@ -42,6 +42,7 @@
                 {% else %} <p class="font-weight-normal">Нет тэгов</p>
                 {% endif %}
                 <small>Автор: {{ post.post_user }}</small>
+                <small class="d-block">Страна: {{ post.post_country }}</small>
                 <small class="d-block">Дата написания: {{ post.created_date.date }}</small>
             </a>
             <hr>

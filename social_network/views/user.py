@@ -20,6 +20,14 @@ class UserListView(ListView, LoginRequiredMixin):
         for a in UserInfo.objects.all():
             users_posts[a.pk] = len(Post.objects.filter(post_user=a.pk))
         context['post_count'] = users_posts
+        users_country = {}
+        for a in UserInfo.objects.all():
+            country = []
+            users_country[a.pk] = 0
+            for aa in Post.objects.filter(post_user=a.pk):
+                country.append(aa.post_country)
+                users_country[a.pk] = len(list(set(country)))
+        context['users_country'] = users_country
         return context
 
 
@@ -32,7 +40,7 @@ class UserDetailView(DetailView, LoginRequiredMixin):
         now_pk = int(self.kwargs.get('pk'))
         current_user = UserInfo.objects.get(id=now_pk)
         context['current_user'] = current_user
-        context['users_posts'] = Post.objects.filter(post_user=current_user)
+        context['users_posts'] = Post.objects.filter(post_user=current_user).order_by('post_country')
         return context
 
 

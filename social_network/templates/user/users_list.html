@@ -9,27 +9,30 @@
         </div>
         <ul class="list-group list-group-flush w-50">
             {% for user_id, post_count in post_count.items %}
-                {% for user in userinfo_list %}
-                    {% if user_id == user.pk %}
-                        <li class="list-group-item p-2"><a
-                            href="{% url 'user_detail' user.pk %}"
-                            class="text-decoration-none text-dark d-block">
-                        {{ forloop.counter }}. {{ user.user.username.capitalize }}</a>
-                        <p>Количество постов:{{ post_count }} </p>
-                        <div class="icons">
-                            {% if user.access_status %}
-                                <a href="{% url 'change_access_status' user.pk %}">Заблокировать</a>
-                            {% else %}
-                                <a href="{% url 'change_access_status' user.pk %}">Разблокировать</a>{% endif %}
-                            <br>
-                            {% if user.create_post_status %}
-                                <a href="{% url 'change_create_post_status' user.pk %}">Запретить создание
-                                    постов</a>
-                            {% else %}<a href="{% url 'change_create_post_status' user.pk %}">Разрешить создание
-                                постов</a>{% endif %}
-                        </div>
-                    {% endif %}
-                </li>
+                {% for user_Id, country_count in users_country.items %}
+                    {% for user in userinfo_list %}
+                        {% if user_id == user.pk and user_id == user_Id %}
+                            <li class="list-group-item p-2"><a
+                                    href="{% url 'user_detail' user.pk %}"
+                                    class="text-decoration-none text-dark d-block">
+                                {{ forloop.counter }}. {{ user.user.username.capitalize }}</a>
+                                <span>Количество постов:{{ post_count }}</span><br>
+                                <span>Количество стран к которым создавались посты: {{ country_count }}</span>
+                                <div class="icons">
+                                    {% if user.access_status %}
+                                        <a href="{% url 'change_access_status' user.pk %}">Заблокировать</a>
+                                    {% else %}
+                                        <a href="{% url 'change_access_status' user.pk %}">Разблокировать</a>{% endif %}
+                                    <br>
+                                    {% if user.create_post_status %}
+                                        <a href="{% url 'change_create_post_status' user.pk %}">Запретить создание
+                                            постов</a>
+                                    {% else %}<a href="{% url 'change_create_post_status' user.pk %}">Разрешить создание
+                                        постов</a>{% endif %}
+                                </div>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
                 {% endfor %}
             {% endfor %}
         </ul>
