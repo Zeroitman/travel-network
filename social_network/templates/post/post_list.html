@@ -26,21 +26,34 @@
                     </button>
                 </div>
             {% endif %}
-            <a href="" class="list-group-item list-group-item-action m-1">
             {% if user.is_authenticated %}
                 <a href="{% url 'post_detail' post.pk %}" class="list-group-item list-group-item-action m-1">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="font-weight-bolder">{{ post.post_subject }}</h5>
+                        <small>Рейтинг: {{ post.rating }}</small>
+                    </div>
+                    {% if post.tag %}
+                        <p class="font-weight-normal d-block">Тэги: {{ post.tag }}</p>
+                    {% else %} <p class="font-weight-normal">Нет тэгов</p>
+                    {% endif %}
+                    <small>Автор: {{ post.post_user }}</small>
+                    <small class="d-block">Дата написания: {{ post.created_date.date }}</small>
+
+                </a>
+            {% else %} <a href="" class="list-group-item list-group-item-action m-1">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="font-weight-bolder">{{ post.post_subject }}</h5>
+                    <small>Рейтинг: {{ post.rating }}</small>
+                </div>
+                {% if post.tag %}
+                    <p class="font-weight-normal d-block">Тэги: {{ post.tag }}</p>
+                {% else %} <p class="font-weight-normal">Нет тэгов</p>
+                {% endif %}
+                <small>Автор: {{ post.post_user }}</small>
+                <small class="d-block">Дата написания: {{ post.created_date.date }}</small>
+
+            </a>
             {% endif %}
-        <div class="d-flex w-100 justify-content-between">
-            <h5 class="font-weight-bolder">{{ post.post_subject }}</h5>
-            <small>Рейтинг: {{ post.rating }}</small>
-        </div>
-        {% if post.tag %}
-            <p class="font-weight-normal d-block">Тэги: {{ post.tag }}</p>
-        {% else %} <p class="font-weight-normal">Нет тэгов</p>
-        {% endif %}
-        <small>Автор: {{ post.post_user }}</small>
-        <small class="d-block">Дата написания: {{ post.created_date.date }}</small>
-        </a>
             <hr>
         {% endfor %}
     </div>

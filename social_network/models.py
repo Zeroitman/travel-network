@@ -23,7 +23,7 @@ class Post(models.Model):
         verbose_name = 'Пост'
         verbose_name_plural = 'Посты'
 
-    post_user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="Создатель поста", on_delete=models.CASCADE)
+    post_user = models.ForeignKey("UserInfo", verbose_name="Создатель поста", on_delete=models.CASCADE)
     post_subject = models.CharField("Тема поста", max_length=200)
     post_body = models.TextField("Тело поста", validators=[MinLengthValidator(3)])
     tag = models.CharField("Тэги", max_length=100, blank=True)

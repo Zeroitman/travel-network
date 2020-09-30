@@ -5,7 +5,7 @@ from django.contrib import messages
 from rest_framework import status
 from rest_framework.decorators import api_view
 from social_network.forms.user import UserInfoForm, UserForm
-from social_network.models import UserInfo
+from social_network.models import UserInfo, Post
 from social_network.serializers.user import UserSerializer
 from source.utils import MediaResponse
 
@@ -24,6 +24,7 @@ class UserDetailView(DetailView, LoginRequiredMixin):
         now_pk = int(self.kwargs.get('pk'))
         current_user = UserInfo.objects.get(id=now_pk)
         context['current_user'] = current_user
+        context['users_posts'] = Post.objects.filter(post_user=current_user)
         return context
 
 
