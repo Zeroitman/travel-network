@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.validators import MinLengthValidator
 from django.db import models
@@ -24,6 +23,7 @@ class Post(models.Model):
         verbose_name_plural = 'Посты'
 
     post_user = models.ForeignKey("UserInfo", verbose_name="Создатель поста", on_delete=models.CASCADE)
+    post_country = models.ForeignKey("Country", verbose_name="Страна поста", on_delete=models.CASCADE)
     post_subject = models.CharField("Тема поста", max_length=200)
     post_body = models.TextField("Тело поста", validators=[MinLengthValidator(3)])
     tag = models.CharField("Тэги", max_length=100, blank=True)
@@ -38,6 +38,9 @@ class Post(models.Model):
 
 
 class Comments(models.Model):
+    class Meta:
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
     user_nickname = models.ForeignKey('UserInfo', on_delete=models.CASCADE, related_name='comments')
     post = models.ForeignKey('Post', on_delete=models.CASCADE, related_name='comments')
     text = models.TextField(max_length=100000, null=True, verbose_name="Текст комментария")
@@ -45,3 +48,13 @@ class Comments(models.Model):
 
     def __str__(self):
         return "%s. %s" % (self.pk, self.user_nickname)
+
+
+class Country(models.Model):
+    class Meta:
+        verbose_name = 'Страна'
+        verbose_name_plural = 'Страны'
+    name = models.CharField(verbose_name="Название страны", max_length=500)
+
+    def __str__(self):
+        return self.name
