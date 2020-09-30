@@ -6,10 +6,9 @@ from django.views.generic import ListView, DetailView, CreateView
 from django.contrib import messages
 from rest_framework import status
 from rest_framework.decorators import api_view
-from rest_framework.views import APIView
 from social_network.forms import UserInfoForm, UserForm, PostForm
 from social_network.models import Post, UserInfo
-from social_network.serializers import PostSerializer
+from social_network.serializers import PostSerializer, UserSerializer
 from source.constants import API_SECURE_KEY
 from source.utils import MediaResponse
 
@@ -103,33 +102,74 @@ def change_post_status(request, pk):
     return redirect('post_list')
 
 
-def increase_post_rating(request, pk):
-    if not request.user.is_superuser and request.user:
-        post = get_object_or_404(Post, pk=pk)
-        post.rating += 1
-        post.save()
-    return redirect('post_list')
-
-
-def decrease_post_rating(request, pk):
-    if not request.user.is_superuser and request.user:
-        post = get_object_or_404(Post, pk=pk)
-        post.rating -= 1
-        post.save()
-    return redirect('post_list')
-
-
-class CreatePostViewSet(APIView):
-    def post(self, request):
-        # if request.headers.get('API-SECURE-KEY') != API_SECURE_KEY:
-        #     return MediaResponse("FAIL", "INVALID_SECURE_KEY", code=status.HTTP_400_BAD_REQUEST)
+@api_view(['POST', 'GET'])
+def post(request):
+    # if request.headers.get('API-SECURE-KEY') != API_SECURE_KEY:
+    #     return MediaResponse("FAIL", "INVALID_SECURE_KEY", code=status.HTTP_400_BAD_REQUEST)
+    if request.method == 'POST':
         user_id = request.data.get('post_user')
         user = User.objects.filter(pk=user_id).first()
         if user:
             if user.is_superuser:
                 return MediaResponse("FAIL", "ADMIN_CAN'T_CREATE_POST", code=status.HTTP_200_OK)
-            serializer = PostSerializer(data=request.data)
+            new_request_data = request.data.copy()
+            new_request_data['activity'] = True
+            serializer = PostSerializer(data=new_request_data)
             if serializer.is_valid():
                 serializer.save()
                 return MediaResponse("SUCCESS", "SUCCESSFULLY_ADDED", code=status.HTTP_200_OK)
             return MediaResponse("FAIL", serializer.errors, code=status.HTTP_200_OK)
+    else:
+        posts = Post.objects.filter(activity=True)
+        serializer = PostSerializer(posts, many=True)
+        if serializer.data:
+            return MediaResponse("SUCCESS", "", code=status.HTTP_200_OK, result=serializer.data)
+    return MediaResponse("SUCCESS", details="NO_DATA", code=status.HTTP_200_OK, result=[])
+
+
+@api_view(['GET'])
+def users(request):
+    # if request.headers.get('API-SECURE-KEY') != API_SECURE_KEY:
+    #     return MediaResponse("FAIL", "INVALID_SECURE_KEY", code=status.HTTP_400_BAD_REQUEST)
+    serializer = UserSerializer(UserInfo.objects.all(), many=True)
+    if serializer.data:
+        return MediaResponse("SUCCESS", "", code=status.HTTP_200_OK, result=serializer.data)
+
+
+def change_rating(request, pk, up=True):
+    if not request.user.is_superuser and request.user:
+        post = get_object_or_404(Post, pk=pk)
+        if up:
+            post.rating += 1
+        else:
+            post.rating -= 1
+        post.save()
+        return True
+    return False
+
+
+def increase_post_rating(request, pk):
+    change_rating(request, pk)
+    return redirect('post_list')
+
+
+def decrease_post_rating(request, pk):
+    change_rating(request, pk, False)
+    return redirect('post_list')
+
+
+@api_view(['POST'])
+def api_increase_post_rating(request, pk):
+    # if request.headers.get('API-SECURE-KEY') != API_SECURE_KEY:
+    #     return MediaResponse("FAIL", "INVALID_SECURE_KEY", code=status.HTTP_400_BAD_REQUEST)
+    if change_rating(request, pk):
+        return MediaResponse("SUCCESS", "RATINGS_INCREASED", code=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def api_decrease_post_rating(request, pk):
+    print("Her")
+    # if request.headers.get('API-SECURE-KEY') != API_SECURE_KEY:
+    #     return MediaResponse("FAIL", "INVALID_SECURE_KEY", code=status.HTTP_400_BAD_REQUEST)
+    if change_rating(request, pk, False):
+        return MediaResponse("SUCCESS", "RATINGS_DECREASED", code=status.HTTP_200_OK)

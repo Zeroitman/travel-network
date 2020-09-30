@@ -13,5 +13,8 @@ urlpatterns = [
     path('user/<int:pk>/change_access_status', change_access_status, name='change_access_status'),
     path('user/<int:pk>/change_create_post_status', change_create_post_status, name='change_create_post_status'),
     #     api-----------------------------------------------------------------------------------------------------------
-    path('api/create-post', CreatePostViewSet.as_view(), name='api_create_post')
+    path('api/post', post, name='create_post/get_posts'),
+    path('api/user', users, name='get_users'),
+    path('api/post/<str:pk>/api_increase_post_rating', api_increase_post_rating, name='api_increase_post_rating'),
+    path('api/post/<str:pk>/api_decrease_post_rating', api_decrease_post_rating, name='api_decrease_post_rating'),
 ]
