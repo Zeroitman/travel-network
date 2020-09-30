@@ -26,7 +26,7 @@
             <ul class="navbar-nav">
                 {% if user.is_authenticated %}
                     <li class="nav-item active">
-                        <a class="nav-link" href="">Список стран<span
+                        <a class="nav-link" href="{% url 'country_list' %}">Список стран<span
                                 class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item active">

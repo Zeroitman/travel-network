@@ -24,6 +24,6 @@ urlpatterns = [
     path('user/<int:pk>/change_access_status', change_access_status, name='change_access_status'),
     path('api/user', users, name='get_users'),
     # country-----------------------------------------------------------------------------------------------------------
-    # path('countries-list/', CountryDetailView.as_view(), name='users_list'),
+    path('countries-list/', CountryListView.as_view(), name='country_list'),
     path('country/<int:pk>/detail', CountryDetailView.as_view(), name='country_detail'),
 ]
