@@ -8,23 +8,29 @@
             <h2 class="font-weight-bold">Список пользователей</h2>
         </div>
         <ul class="list-group list-group-flush w-50">
-            {% for user in userinfo_list %}
-                <li class="list-group-item p-2"><a
-                        href="{% url 'user_detail' user.pk %}"
-                        class="text-decoration-none text-dark d-block">
-                    {{ forloop.counter }}. {{ user.user.username.capitalize }}</a>
-                    {% if request.user.is_superuser %}
+            {% for user_id, post_count in post_count.items %}
+                {% for user in userinfo_list %}
+                    {% if user_id == user.pk  and request.user.is_superuser %}
+                        <li class="list-group-item p-2"><a
+                            href="{% url 'user_detail' user.pk %}"
+                            class="text-decoration-none text-dark d-block">
+                        {{ forloop.counter }}. {{ user.user.username.capitalize }}</a>
+                        <p>Количество постов:{{ post_count }} </p>
                         <div class="icons">
                             {% if user.access_status %}
                                 <a href="{% url 'change_access_status' user.pk %}">Заблокировать</a>
-                            {% else %} <a href="{% url 'change_access_status' user.pk %}">Разблокировать</a>{% endif %}
+                            {% else %}
+                                <a href="{% url 'change_access_status' user.pk %}">Разблокировать</a>{% endif %}
                             <br>
                             {% if user.create_post_status %}
-                                <a href="{% url 'change_create_post_status' user.pk %}">Запретить создание постов</a>
-                            {% else %} <a href="{% url 'change_create_post_status' user.pk %}">Разрешить создание постов</a>{% endif %}
+                                <a href="{% url 'change_create_post_status' user.pk %}">Запретить создание
+                                    постов</a>
+                            {% else %}<a href="{% url 'change_create_post_status' user.pk %}">Разрешить создание
+                                постов</a>{% endif %}
                         </div>
                     {% endif %}
                 </li>
+                {% endfor %}
             {% endfor %}
         </ul>
     </div>
