@@ -93,10 +93,10 @@ def api_decrease_post_rating(request, pk):
 def post(request):
     if request.method == 'POST':
         user_id = request.data.get('post_user')
-        user = User.objects.filter(pk=user_id).first()
+        user = UserInfo.objects.filter(pk=user_id).first()
         if user:
-            if user.is_superuser:
-                return MediaResponse("FAIL", "ADMIN_CAN'T_CREATE_POST", code=status.HTTP_200_OK)
+            if not user.create_post_status:
+                return MediaResponse("FAIL", "THIS_USER_CAN'T_CREATE_POST", code=status.HTTP_200_OK)
             new_request_data = request.data.copy()
             new_request_data['activity'] = True
             serializer = PostSerializer(data=new_request_data)
