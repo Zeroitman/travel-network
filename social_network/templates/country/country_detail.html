@@ -4,29 +4,21 @@
 {% block content %}
     <div class="container">
         <div class="border-bottom pb-2 pt-2 text-center">
-            <h2 class="font-weight-bold">Просмотр профиля "{{ current_user.user.username }}"</h2>
+            <h2 class="font-weight-bold">Просмотр страны "{{ country.name }}"</h2>
         </div>
-        <div class="d-block font-weight-bold mb-2">Логин: <span
-                class="font-weight-normal">{{ current_user.user.username }}</span>
+        <div class="d-block font-weight-bold mb-2">Столица: <span
+                class="font-weight-normal">{{ country.capital }}</span>
         </div>
-        <div class="d-block font-weight-bold mb-2">ФИО: <span
-                class="font-weight-normal">{{ current_user.full_name }}</span>
+        <div class="d-block font-weight-bold mb-2">Регион: <span
+                class="font-weight-normal">{{ country.region }}</span>
         </div>
-
-        <div class="d-block font-weight-bold mb-2">Создание постов:
-            {% if current_user.create_post_status %}
-                <span class="font-weight-normal">Доступно</span>
-            {% else %} <span class="font-weight-normal">Заблокировано</span>{% endif %}
-        </div>
-        <div class="d-block font-weight-bold mb-2">Доступ к блоку:
-            {% if current_user.access_status %}
-                <span class="font-weight-normal">Открыт</span>
-            {% else %} <span class="font-weight-normal">Закрыт</span>{% endif %}
+        <div class="d-block font-weight-bold mb-2">Население: <span
+                class="font-weight-normal">{{ country.population }}</span>
         </div>
         <div class="border-bottom pb-2 pt-2 text-center">
-            <h2 class="font-weight-bold">Посты пользователя</h2>
+            <h2 class="font-weight-bold">Посты для этой страны</h2>
         </div>
-        {% for post in users_posts %}
+        {% for post in post_list %}
             {% if request.user.is_superuser %}
                 {% if post.activity %}
                     <a href="{% url 'change_post_status' post.pk %}">Отключить в ленте</a>
@@ -42,8 +34,7 @@
                 {% else %} <p class="font-weight-normal">Нет тэгов</p>
                 {% endif %}
                 <small>Автор: {{ post.post_user }}</small>
-                <small class="d-block">Страна: {{ post.post_country }}</small>
-                <small class="d-block">Дата написания: {{ post.created_date.date }}</small>
+                <small class="d-block">Дата написания: {{ post.created_date }}</small>
             </a>
             <hr>
         {% endfor %}

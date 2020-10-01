@@ -2,6 +2,7 @@ from django.urls import path
 from social_network.views.post import *
 from social_network.views.comment import *
 from social_network.views.user import *
+from social_network.views.country import *
 
 urlpatterns = [
     # post--------------------------------------------------------------------------------------------------------------
@@ -15,11 +16,18 @@ urlpatterns = [
     path('api/post/<str:pk>/api_increase_post_rating', api_increase_post_rating, name='api_increase_post_rating'),
     path('api/post/<str:pk>/api_decrease_post_rating', api_decrease_post_rating, name='api_decrease_post_rating'),
     path('api/post', post, name='create_post/get_posts'),
+    path('api/post/<int:pk>', get_post, name='get_post'),
     # comment-----------------------------------------------------------------------------------------------------------
     path('post-comment-create/add', CommentCreateView.as_view(), name='create_comment'),
     # user--------------------------------------------------------------------------------------------------------------
     path('users-list/', UserListView.as_view(), name='users_list'),
     path('user/<int:pk>/detail', UserDetailView.as_view(), name='user_detail'),
     path('user/<int:pk>/change_access_status', change_access_status, name='change_access_status'),
-    path('api/user', users, name='get_users')
+    path('api/user', users, name='get_users'),
+    path('api/user/<int:pk>', user, name='get_user'),
+    # country-----------------------------------------------------------------------------------------------------------
+    path('countries-list/', CountryListView.as_view(), name='country_list'),
+    path('country/<int:pk>/detail', CountryDetailView.as_view(), name='country_detail'),
+    path('api/country', countries, name='get_countries'),
+    path('api/country/<int:pk>', country, name='get_country')
 ]

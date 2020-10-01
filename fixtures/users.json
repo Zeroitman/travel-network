@@ -3,8 +3,8 @@
   "model": "auth.user",
   "pk": 1,
   "fields": {
-    "password": "pbkdf2_sha256$120000$qdv35uFsPWT1$f79vc0FWC/GiBEkL1vSzVRP7WinedNbHEdwnZHAG79A=",
-    "last_login": "2020-09-28T06:58:54.443Z",
+    "password": "pbkdf2_sha256$120000$jQHJF3GfHnEY$c5ED+JqEDM3r0W9fCCYRz5/23GtBxJk12p4xuCa6KAg=",
+    "last_login": "2020-10-01T06:33:28.550Z",
     "is_superuser": true,
     "username": "admin",
     "first_name": "",
@@ -12,27 +12,69 @@
     "email": "",
     "is_staff": true,
     "is_active": true,
-    "date_joined": "2020-09-25T06:44:08.038Z",
+    "date_joined": "2020-09-30T07:58:08.045Z",
     "groups": [],
     "user_permissions": []
   }
 },
 {
   "model": "auth.user",
-  "pk": 2,
+  "pk": 5,
   "fields": {
-    "password": "pbkdf2_sha256$120000$F6tS0JdG9HLj$eKIU1ts+1fOWSzXYg9COcltz7bcBlwXCucLfZK8X3sI=",
-    "last_login": null,
+    "password": "pbkdf2_sha256$120000$OkFhuB8HDb3z$AM94120H81j7UwEK8ooCe+AO3KusjpNzyjQsoje2ITY=",
+    "last_login": "2020-10-01T06:36:36.567Z",
     "is_superuser": false,
-    "username": "User",
+    "username": "\u041c\u0430\u0448\u0430",
     "first_name": "",
     "last_name": "",
     "email": "",
     "is_staff": false,
     "is_active": true,
-    "date_joined": "2020-09-28T06:59:29.100Z",
+    "date_joined": "2020-09-30T12:34:22.468Z",
     "groups": [],
     "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 6,
+  "fields": {
+    "password": "pbkdf2_sha256$120000$Z4pQIy6Uqqni$t9nBrHF5naqFFF2aNpvhqHoknGsfAnjUoEFA7Fam2Vs=",
+    "last_login": "2020-10-01T06:26:42.495Z",
+    "is_superuser": false,
+    "username": "\u041f\u0430\u0448\u0430",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2020-09-30T14:56:10.094Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "social_network.userinfo",
+  "pk": 1,
+  "fields": {
+    "user": [
+      "\u041c\u0430\u0448\u0430"
+    ],
+    "full_name": "\u041c\u0430\u0440\u0438\u044f",
+    "create_post_status": true,
+    "access_status": true
+  }
+},
+{
+  "model": "social_network.userinfo",
+  "pk": 2,
+  "fields": {
+    "user": [
+      "\u041f\u0430\u0448\u0430"
+    ],
+    "full_name": "\u041f\u0430\u0432\u0435\u043b",
+    "create_post_status": true,
+    "access_status": true
   }
 }
 ]

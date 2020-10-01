@@ -5,7 +5,7 @@ from django.contrib import messages
 from rest_framework import status
 from rest_framework.decorators import api_view
 from social_network.forms.user import UserInfoForm, UserForm
-from social_network.models import UserInfo
+from social_network.models import UserInfo, Post
 from social_network.serializers.user import UserSerializer
 from source.utils import MediaResponse
 
@@ -13,6 +13,22 @@ from source.utils import MediaResponse
 class UserListView(ListView, LoginRequiredMixin):
     model = UserInfo
     template_name = 'user/users_list.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        users_posts = {}
+        for a in UserInfo.objects.all():
+            users_posts[a.pk] = len(Post.objects.filter(post_user=a.pk))
+        context['post_count'] = users_posts
+        users_country = {}
+        for a in UserInfo.objects.all():
+            country = []
+            users_country[a.pk] = 0
+            for aa in Post.objects.filter(post_user=a.pk):
+                country.append(aa.post_country)
+                users_country[a.pk] = len(list(set(country)))
+        context['users_country'] = users_country
+        return context
 
 
 class UserDetailView(DetailView, LoginRequiredMixin):
@@ -24,6 +40,7 @@ class UserDetailView(DetailView, LoginRequiredMixin):
         now_pk = int(self.kwargs.get('pk'))
         current_user = UserInfo.objects.get(id=now_pk)
         context['current_user'] = current_user
+        context['users_posts'] = Post.objects.filter(post_user=current_user).order_by('post_country')
         return context
 
 
@@ -56,6 +73,14 @@ def users(request):
     serializer = UserSerializer(UserInfo.objects.all(), many=True)
     if serializer.data:
         return MediaResponse("SUCCESS", "", code=status.HTTP_200_OK, result=serializer.data)
+
+
+@api_view(['GET'])
+def user(request, pk):
+    serializer = UserSerializer(UserInfo.objects.filter(pk=pk).first())
+    if serializer.data:
+        return MediaResponse("SUCCESS", "", code=status.HTTP_200_OK, result=serializer.data)
+    return MediaResponse("FAIL", details="NO_DATA", code=status.HTTP_200_OK, result=[])
 
 
 def change_access_status(request, pk):

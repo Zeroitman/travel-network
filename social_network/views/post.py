@@ -17,7 +17,7 @@ class PostList(ListView):
     def get_queryset(self):
         if self.request.user.is_superuser:
             return Post.objects.all()
-        return Post.objects.filter(activity=True)
+        return Post.objects.filter(activity=True).order_by('created_date')
 
 
 class PostCreateView(CreateView, LoginRequiredMixin):
@@ -27,6 +27,10 @@ class PostCreateView(CreateView, LoginRequiredMixin):
 
     def get_success_url(self):
         return reverse('post_detail', kwargs={'pk': self.object})
+
+    def form_valid(self, form):
+        form.instance.post_user = UserInfo.objects.get(user=self.request.user)
+        return super().form_valid(form)
 
 
 class PostDetailView(DetailView, LoginRequiredMixin):
@@ -89,10 +93,10 @@ def api_decrease_post_rating(request, pk):
 def post(request):
     if request.method == 'POST':
         user_id = request.data.get('post_user')
-        user = User.objects.filter(pk=user_id).first()
+        user = UserInfo.objects.filter(pk=user_id).first()
         if user:
-            if user.is_superuser:
-                return MediaResponse("FAIL", "ADMIN_CAN'T_CREATE_POST", code=status.HTTP_200_OK)
+            if not user.create_post_status:
+                return MediaResponse("FAIL", "THIS_USER_CAN'T_CREATE_POST", code=status.HTTP_200_OK)
             new_request_data = request.data.copy()
             new_request_data['activity'] = True
             serializer = PostSerializer(data=new_request_data)
@@ -101,10 +105,16 @@ def post(request):
                 return MediaResponse("SUCCESS", "SUCCESSFULLY_ADDED", code=status.HTTP_200_OK)
             return MediaResponse("FAIL", serializer.errors, code=status.HTTP_200_OK)
     else:
-        posts = Post.objects.filter(activity=True)
+        posts = Post.objects.filter(activity=True).order_by('created_date')
         serializer = PostSerializer(posts, many=True)
         if serializer.data:
             return MediaResponse("SUCCESS", "", code=status.HTTP_200_OK, result=serializer.data)
     return MediaResponse("SUCCESS", details="NO_DATA", code=status.HTTP_200_OK, result=[])
 
 
+@api_view(['GET'])
+def get_post(request, pk):
+    serializer = PostSerializer(Post.objects.filter(pk=pk, activity=True).first())
+    if serializer.data:
+        return MediaResponse("SUCCESS", "", code=status.HTTP_200_OK, result=serializer.data)
+    return MediaResponse("FAIL", details="NO_DATA", code=status.HTTP_200_OK, result=[])
