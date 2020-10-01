@@ -28,4 +28,6 @@ urlpatterns = [
     # country-----------------------------------------------------------------------------------------------------------
     path('countries-list/', CountryListView.as_view(), name='country_list'),
     path('country/<int:pk>/detail', CountryDetailView.as_view(), name='country_detail'),
+    path('api/country', countries, name='get_countries'),
+    path('api/country/<int:pk>', country, name='get_country')
 ]
