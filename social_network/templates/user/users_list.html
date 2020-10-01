@@ -18,18 +18,21 @@
                                 {{ forloop.counter }}. {{ user.user.username.capitalize }}</a>
                                 <span>Количество постов:{{ post_count }}</span><br>
                                 <span>Количество стран к которым создавались посты: {{ country_count }}</span>
-                                <div class="icons">
-                                    {% if user.access_status %}
-                                        <a href="{% url 'change_access_status' user.pk %}">Заблокировать</a>
-                                    {% else %}
-                                        <a href="{% url 'change_access_status' user.pk %}">Разблокировать</a>{% endif %}
-                                    <br>
-                                    {% if user.create_post_status %}
-                                        <a href="{% url 'change_create_post_status' user.pk %}">Запретить создание
-                                            постов</a>
-                                    {% else %}<a href="{% url 'change_create_post_status' user.pk %}">Разрешить создание
-                                        постов</a>{% endif %}
-                                </div>
+                                {% if  request.user.is_superuser %}
+                                    <div class="icons">
+                                        {% if user.access_status %}
+                                            <a href="{% url 'change_access_status' user.pk %}">Заблокировать</a>
+                                        {% else %}
+                                            <a href="{% url 'change_access_status' user.pk %}">Разблокировать</a>{% endif %}
+                                        <br>
+                                        {% if user.create_post_status %}
+                                            <a href="{% url 'change_create_post_status' user.pk %}">Запретить создание
+                                                постов</a>
+                                        {% else %}
+                                            <a href="{% url 'change_create_post_status' user.pk %}">Разрешить создание
+                                                постов</a>{% endif %}
+                                    </div>
+                                {% endif %}
                             </li>
                         {% endif %}
                     {% endfor %}

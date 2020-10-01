@@ -17,7 +17,7 @@ class PostList(ListView):
     def get_queryset(self):
         if self.request.user.is_superuser:
             return Post.objects.all()
-        return Post.objects.filter(activity=True)
+        return Post.objects.filter(activity=True).order_by('created_date')
 
 
 class PostCreateView(CreateView, LoginRequiredMixin):
@@ -105,10 +105,16 @@ def post(request):
                 return MediaResponse("SUCCESS", "SUCCESSFULLY_ADDED", code=status.HTTP_200_OK)
             return MediaResponse("FAIL", serializer.errors, code=status.HTTP_200_OK)
     else:
-        posts = Post.objects.filter(activity=True)
+        posts = Post.objects.filter(activity=True).order_by('created_date')
         serializer = PostSerializer(posts, many=True)
         if serializer.data:
             return MediaResponse("SUCCESS", "", code=status.HTTP_200_OK, result=serializer.data)
     return MediaResponse("SUCCESS", details="NO_DATA", code=status.HTTP_200_OK, result=[])
 
 
+@api_view(['GET'])
+def get_post(request, pk):
+    serializer = PostSerializer(Post.objects.filter(pk=pk, activity=True).first())
+    if serializer.data:
+        return MediaResponse("SUCCESS", "", code=status.HTTP_200_OK, result=serializer.data)
+    return MediaResponse("FAIL", details="NO_DATA", code=status.HTTP_200_OK, result=[])

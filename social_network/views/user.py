@@ -75,6 +75,14 @@ def users(request):
         return MediaResponse("SUCCESS", "", code=status.HTTP_200_OK, result=serializer.data)
 
 
+@api_view(['GET'])
+def user(request, pk):
+    serializer = UserSerializer(UserInfo.objects.filter(pk=pk).first())
+    if serializer.data:
+        return MediaResponse("SUCCESS", "", code=status.HTTP_200_OK, result=serializer.data)
+    return MediaResponse("FAIL", details="NO_DATA", code=status.HTTP_200_OK, result=[])
+
+
 def change_access_status(request, pk):
     if request.user.is_superuser:
         user = get_object_or_404(UserInfo, pk=pk)
