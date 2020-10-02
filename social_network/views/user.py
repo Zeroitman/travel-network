@@ -7,6 +7,7 @@ from rest_framework.decorators import api_view
 from social_network.forms.user import UserInfoForm, UserForm
 from social_network.models import UserInfo, Post
 from social_network.serializers.user import UserSerializer
+from source.constants import API_SECURE_KEY
 from source.utils import MediaResponse
 
 
@@ -70,6 +71,8 @@ def register(request):
 
 @api_view(['GET'])
 def users(request):
+    if request.headers.get('API-SECURE-KEY') != API_SECURE_KEY:
+        return MediaResponse("FAIL", "INVALID_SECURE_KEY", code=status.HTTP_400_BAD_REQUEST)
     serializer = UserSerializer(UserInfo.objects.all(), many=True)
     if serializer.data:
         return MediaResponse("SUCCESS", "", code=status.HTTP_200_OK, result=serializer.data)
@@ -77,6 +80,8 @@ def users(request):
 
 @api_view(['GET'])
 def user(request, pk):
+    if request.headers.get('API-SECURE-KEY') != API_SECURE_KEY:
+        return MediaResponse("FAIL", "INVALID_SECURE_KEY", code=status.HTTP_400_BAD_REQUEST)
     serializer = UserSerializer(UserInfo.objects.filter(pk=pk).first())
     if serializer.data:
         return MediaResponse("SUCCESS", "", code=status.HTTP_200_OK, result=serializer.data)

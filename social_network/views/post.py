@@ -7,6 +7,7 @@ from rest_framework.decorators import api_view
 from social_network.forms.post import PostForm
 from social_network.models import *
 from social_network.serializers.post import PostSerializer
+from source.constants import API_SECURE_KEY
 from source.utils import MediaResponse
 
 
@@ -79,18 +80,24 @@ def decrease_post_rating(request, pk):
 # ----------------------------------------------------------------------------------------------------------------------
 @api_view(['POST'])
 def api_increase_post_rating(request, pk):
+    if request.headers.get('API-SECURE-KEY') != API_SECURE_KEY:
+        return MediaResponse("FAIL", "INVALID_SECURE_KEY", code=status.HTTP_400_BAD_REQUEST)
     if change_rating(request, pk):
         return MediaResponse("SUCCESS", "RATINGS_INCREASED", code=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
 def api_decrease_post_rating(request, pk):
+    if request.headers.get('API-SECURE-KEY') != API_SECURE_KEY:
+        return MediaResponse("FAIL", "INVALID_SECURE_KEY", code=status.HTTP_400_BAD_REQUEST)
     if change_rating(request, pk, False):
         return MediaResponse("SUCCESS", "RATINGS_DECREASED", code=status.HTTP_200_OK)
 
 
 @api_view(['POST', 'GET'])
 def post(request):
+    if request.headers.get('API-SECURE-KEY') != API_SECURE_KEY:
+        return MediaResponse("FAIL", "INVALID_SECURE_KEY", code=status.HTTP_400_BAD_REQUEST)
     if request.method == 'POST':
         user_id = request.data.get('post_user')
         user = UserInfo.objects.filter(pk=user_id).first()
@@ -114,6 +121,8 @@ def post(request):
 
 @api_view(['GET'])
 def get_post(request, pk):
+    if request.headers.get('API-SECURE-KEY') != API_SECURE_KEY:
+        return MediaResponse("FAIL", "INVALID_SECURE_KEY", code=status.HTTP_400_BAD_REQUEST)
     serializer = PostSerializer(Post.objects.filter(pk=pk, activity=True).first())
     if serializer.data:
         return MediaResponse("SUCCESS", "", code=status.HTTP_200_OK, result=serializer.data)
