@@ -8,7 +8,7 @@ from source.constants import API_SECURE_KEY
 from source.utils import MediaResponse
 
 
-class CountryListView(ListView, LoginRequiredMixin):
+class CountryListView(LoginRequiredMixin, ListView):
     model = Country
     template_name = 'country/country_list.html'
 
@@ -17,7 +17,7 @@ class CountryListView(ListView, LoginRequiredMixin):
         return Country.objects.filter(name__in=list_country)
 
 
-class CountryDetailView(DetailView, LoginRequiredMixin):
+class CountryDetailView(LoginRequiredMixin, DetailView):
     model = Country
     template_name = 'country/country_detail.html'
 

@@ -11,7 +11,7 @@ from source.constants import API_SECURE_KEY
 from source.utils import MediaResponse
 
 
-class UserListView(ListView, LoginRequiredMixin):
+class UserListView(LoginRequiredMixin, ListView):
     model = UserInfo
     template_name = 'user/users_list.html'
 
@@ -32,7 +32,7 @@ class UserListView(ListView, LoginRequiredMixin):
         return context
 
 
-class UserDetailView(DetailView, LoginRequiredMixin):
+class UserDetailView(LoginRequiredMixin, DetailView):
     model = UserInfo
     template_name = 'user/user_detail.html'
 

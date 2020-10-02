@@ -21,7 +21,7 @@ class PostList(ListView):
         return Post.objects.filter(activity=True).order_by('created_date')
 
 
-class PostCreateView(CreateView, LoginRequiredMixin):
+class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
     template_name = 'post/post_create.html'
     form_class = PostForm
@@ -34,7 +34,7 @@ class PostCreateView(CreateView, LoginRequiredMixin):
         return super().form_valid(form)
 
 
-class PostDetailView(DetailView, LoginRequiredMixin):
+class PostDetailView(LoginRequiredMixin, DetailView):
     model = Post
     template_name = 'post/post_detail.html'
 
